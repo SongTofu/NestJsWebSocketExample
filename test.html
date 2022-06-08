@@ -1,0 +1,55 @@
+<html>
+  <head>
+    <script
+      src="https://cdn.socket.io/4.3.2/socket.io.min.js"
+      integrity="sha384-KAZ4DtjNhLChOB/hxXuKqhMLYvx3b5MlT55xPEiNmREKRzeEm+RVPlTnAn0ajQNs"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      const socket = io("http://localhost:3000");
+      socket.on("connect", function () {
+        console.log("Connected");
+
+        socket.emit("message", { data: "test" });
+        socket.emit("identity", 0, (response) =>
+          console.log("Identity:", response),
+        );
+      });
+
+      function sendMsg() {
+        socket.emit("message", { data: "버튼 누름" });
+      }
+
+      function join(roomId) {
+        socket.emit("join", { data: roomId });
+      }
+
+      function leave(roomId) {
+        socket.emit("leave", { data: roomId });
+      }
+      socket.on("message", (data) => {
+        console.log("message", data);
+      });
+
+      socket.on("events", function (data) {
+        console.log("event", data);
+      });
+      socket.on("exception", function (data) {
+        console.log("event", data);
+      });
+      socket.on("disconnect", function () {
+        console.log("Disconnected");
+      });
+    </script>
+  </head>
+
+  <body>
+    <ul>
+      <li><button onclick="sendMsg()">button1</button></li>
+      <li><button onclick="join(1)">join1</button></li>
+      <li><button onclick="join(2)">join2</button></li>
+      <li><button onclick="leave(1)">leave1</button></li>
+      <li><button onclick="leave(2)">leave2</button></li>
+    </ul>
+  </body>
+</html>
